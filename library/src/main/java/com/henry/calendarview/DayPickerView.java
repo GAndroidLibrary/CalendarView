@@ -78,7 +78,7 @@ public class DayPickerView extends RecyclerView {
      * @param mController 回调监听
      */
     public void setParameter(DataModel dataModel, DatePickerController mController) {
-        if(dataModel == null) {
+        if (dataModel == null) {
             Log.e("crash", "请设置参数");
             return;
         }
@@ -90,7 +90,7 @@ public class DayPickerView extends RecyclerView {
     }
 
     private void scrollToSelectedPosition(SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays, int monthStart) {
-        if(selectedDays != null && selectedDays.getFirst() != null && selectedDays.getFirst().month > monthStart) {
+        if (selectedDays != null && selectedDays.getFirst() != null && selectedDays.getFirst().month > monthStart) {
             int position = selectedDays.getFirst().month - monthStart;
             scrollToPosition(position);
         }
@@ -110,6 +110,8 @@ public class DayPickerView extends RecyclerView {
         public int leastDaysNum;                                   // 至少选择几天
         public int mostDaysNum;                                    // 最多选择几天
         public List<SimpleMonthAdapter.CalendarDay> tags;          // 日期下面对应的标签
+        public List<SimpleMonthAdapter.CalendarDay> mNegativeDays;         // 消极的日期
+
         public String defTag;                                      // 默认显示的标签
 //        public boolean displayTag;                               // 是否显示标签
     }

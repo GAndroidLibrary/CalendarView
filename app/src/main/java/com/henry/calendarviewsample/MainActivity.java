@@ -26,39 +26,46 @@ public class MainActivity extends AppCompatActivity {
 
         DayPickerView.DataModel dataModel = new DayPickerView.DataModel();
         dataModel.yearStart = 2018;
-        dataModel.monthStart = 10;
+        dataModel.monthStart = 0;
         dataModel.monthCount = 2;
         dataModel.defTag = "￥100";
         dataModel.leastDaysNum = 0;
         dataModel.mostDaysNum = 0;
 
         List<SimpleMonthAdapter.CalendarDay> invalidDays = new ArrayList<>();
-        SimpleMonthAdapter.CalendarDay invalidDay1 = new SimpleMonthAdapter.CalendarDay(2016, 8, 10);
-        SimpleMonthAdapter.CalendarDay invalidDay2 = new SimpleMonthAdapter.CalendarDay(2016, 8, 11);
-        SimpleMonthAdapter.CalendarDay invalidDay3 = new SimpleMonthAdapter.CalendarDay(2016, 8, 12);
+        SimpleMonthAdapter.CalendarDay invalidDay1 = new SimpleMonthAdapter.CalendarDay(2018, 11, 10);
+        SimpleMonthAdapter.CalendarDay invalidDay2 = new SimpleMonthAdapter.CalendarDay(2018, 11, 11);
+
+        SimpleMonthAdapter.CalendarDay invalidDay3 = new SimpleMonthAdapter.CalendarDay(2018, 11, 12);
         invalidDays.add(invalidDay1);
         invalidDays.add(invalidDay2);
         invalidDays.add(invalidDay3);
         dataModel.invalidDays = invalidDays;
 
         List<SimpleMonthAdapter.CalendarDay> busyDays = new ArrayList<>();
-        SimpleMonthAdapter.CalendarDay busyDay1 = new SimpleMonthAdapter.CalendarDay(2016, 8, 20);
-        SimpleMonthAdapter.CalendarDay busyDay2 = new SimpleMonthAdapter.CalendarDay(2016, 8, 21);
-        SimpleMonthAdapter.CalendarDay busyDay3 = new SimpleMonthAdapter.CalendarDay(2016, 8, 22);
+        SimpleMonthAdapter.CalendarDay busyDay1 = new SimpleMonthAdapter.CalendarDay(2018, 11, 20);
+        busyDay1.setTag("10箱");
+        SimpleMonthAdapter.CalendarDay busyDay2 = new SimpleMonthAdapter.CalendarDay(2018, 11, 21);
+        busyDay2.setTag("20箱");
+        SimpleMonthAdapter.CalendarDay busyDay3 = new SimpleMonthAdapter.CalendarDay(2018, 11, 22);
+        busyDay3.setTag("30箱");
         busyDays.add(busyDay1);
         busyDays.add(busyDay2);
         busyDays.add(busyDay3);
-        dataModel.busyDays = busyDays;
+//        dataModel.busyDays = busyDays;
+
+        dataModel.mNegativeDays = busyDays;
+
 
 //        SimpleMonthAdapter.CalendarDay startDay = new SimpleMonthAdapter.CalendarDay(2016, 6, 5);
 //        SimpleMonthAdapter.CalendarDay endDay = new SimpleMonthAdapter.CalendarDay(2016, 6, 20);
 //        SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays = new SimpleMonthAdapter.SelectedDays<>(startDay, endDay);
 //        dataModel.selectedDays = selectedDays;
 
-        SimpleMonthAdapter.CalendarDay tag = new SimpleMonthAdapter.CalendarDay(2016, 7, 15);
+        SimpleMonthAdapter.CalendarDay tag = new SimpleMonthAdapter.CalendarDay(2018, 11, 15);
         tag.setTag("标签1");
 
-        SimpleMonthAdapter.CalendarDay tag2 = new SimpleMonthAdapter.CalendarDay(2016, 8, 15);
+        SimpleMonthAdapter.CalendarDay tag2 = new SimpleMonthAdapter.CalendarDay(2018, 11, 16);
         tag2.setTag("标签2");
         List<SimpleMonthAdapter.CalendarDay> tags = new ArrayList<>();
         tags.add(tag);

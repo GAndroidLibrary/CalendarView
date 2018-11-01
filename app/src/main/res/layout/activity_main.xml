@@ -21,6 +21,7 @@
         app:colorInValidDaysBg="#727272"
         app:colorBusyDaysText="#FFFFFF"
         app:colorInValidDaysText="#FFFFFF"
+        app:colorNegativeDayTagText="@android:color/holo_red_light"
 
         app:textSizeDay="14sp"
         app:textSizeTag="12sp"

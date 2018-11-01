@@ -31,7 +31,7 @@ class SimpleMonthView extends View {
     public static final String VIEW_PARAMS_SELECTED_LAST_DATE = "selected_last_date";
     public static final String VIEW_PARAMS_NEAREST_DATE = "mNearestDay";
 
-//    public static final String VIEW_PARAMS_HEIGHT = "height";
+    //    public static final String VIEW_PARAMS_HEIGHT = "height";
     public static final String VIEW_PARAMS_MONTH = "month";
     public static final String VIEW_PARAMS_YEAR = "year";
     public static final String VIEW_PARAMS_WEEK_START = "week_start";
@@ -44,7 +44,7 @@ class SimpleMonthView extends View {
     protected static int MINI_DAY_NUMBER_TEXT_SIZE;                     // 日期字体的最小尺寸
     private static int TAG_TEXT_SIZE;                                   // 标签字体大小
     protected static int MIN_HEIGHT = 10;                               // 最小高度
-//    protected static int MONTH_DAY_LABEL_TEXT_SIZE;                     // 头部的星期几的字体大小
+    //    protected static int MONTH_DAY_LABEL_TEXT_SIZE;                     // 头部的星期几的字体大小
     protected static int MONTH_HEADER_SIZE;                             // 头部的高度（包括年份月份，星期几）
     protected static int YEAR_MONTH_TEXT_SIZE;                         // 头部年份月份的字体大小
     protected static int WEEK_TEXT_SIZE;                                // 头部年份月份的字体大小
@@ -53,6 +53,8 @@ class SimpleMonthView extends View {
 
     private List<SimpleMonthAdapter.CalendarDay> mInvalidDays;          // 禁用的日期
     private List<SimpleMonthAdapter.CalendarDay> mBusyDays;             // 被占用的日期
+    private List<SimpleMonthAdapter.CalendarDay> mNegativeDays;         // 消极的日期
+
     private SimpleMonthAdapter.CalendarDay mNearestDay;                 // 比离入住日期大且是最近的已被占用或者无效日期
     private List<SimpleMonthAdapter.CalendarDay> mCalendarTags;         // 日期下面的标签
     private String mDefTag = "标签";
@@ -65,16 +67,19 @@ class SimpleMonthView extends View {
     protected Paint mWeekTextPaint;                     // 头部星期几的字体画笔
     protected Paint mDayTextPaint;
     protected Paint mTagTextPaint;                      // 日期底部的文字画笔
-//    protected Paint mTitleBGPaint;
+
+    protected Paint mNegativeDayTagTextPaint;                      // 消极日期底部的文字画笔
+
+    //    protected Paint mTitleBGPaint;
     protected Paint mYearMonthPaint;                    // 头部的画笔
     protected Paint mSelectedDayBgPaint;
     protected Paint mBusyDayBgPaint;
     protected Paint mInValidDayBgPaint;
-//    protected Paint mSelectedDayTextPaint;
+    //    protected Paint mSelectedDayTextPaint;
     protected int mCurrentDayTextColor;                 // 今天的字体颜色
     protected int mYearMonthTextColor;                  // 头部年份和月份字体颜色
     protected int mWeekTextColor;                       // 头部星期几字体颜色
-//    protected int mDayTextColor;
+    //    protected int mDayTextColor;
     protected int mDayTextColor;                        // 日期字体颜色
     protected int mSelectedDayTextColor;                // 被选中的日期字体颜色
     protected int mPreviousDayTextColor;                // 过去的字体颜色
@@ -84,6 +89,8 @@ class SimpleMonthView extends View {
     protected int mBusyDaysTextColor;                     // 被占用的日期字体颜色
     protected int mInValidDaysTextColor;                  // 禁用的日期字体颜色
 
+    protected int mNegativeDayTagTextColor;                   // 消极日期tag字体颜色
+
     private final StringBuilder mStringBuilder;
 
     protected boolean mHasToday = false;
@@ -92,7 +99,7 @@ class SimpleMonthView extends View {
     protected int mNumDays = 7;                 // 一行几列
     protected int mNumCells;                    // 一个月有多少天
     private int mDayOfWeekStart = 0;            // 日期对应星期几
-//    protected Boolean mDrawRect;              // 圆角还是圆形
+    //    protected Boolean mDrawRect;              // 圆角还是圆形
     protected int mRowHeight = DEFAULT_HEIGHT;  // 行高
     protected int mWidth;                       // simpleMonthView的宽度
 
@@ -115,6 +122,8 @@ class SimpleMonthView extends View {
 
     SimpleMonthAdapter.CalendarDay cellCalendar;        // cell的对应的日期
 
+    private int normalColor;
+
     /**
      * @param context
      * @param typedArray
@@ -123,24 +132,32 @@ class SimpleMonthView extends View {
     public SimpleMonthView(Context context, TypedArray typedArray, DayPickerView.DataModel dataModel) {
         super(context);
 
+
         Resources resources = context.getResources();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            normalColor = resources.getColor(R.color.normal_day, context.getTheme());
+        } else {
+            normalColor = resources.getColor(R.color.normal_day);
+        }
         mDayLabelCalendar = Calendar.getInstance();
         mCalendar = Calendar.getInstance();
         today = new Time(Time.getCurrentTimezone());
         today.setToNow();
         mDayOfWeekTypeface = resources.getString(R.string.sans_serif);
         mMonthTitleTypeface = resources.getString(R.string.sans_serif);
-        mCurrentDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorCurrentDay, resources.getColor(R.color.normal_day));
-        mYearMonthTextColor = typedArray.getColor(R.styleable.DayPickerView_colorYearMonthText, resources.getColor(R.color.normal_day));
-        mWeekTextColor = typedArray.getColor(R.styleable.DayPickerView_colorWeekText, resources.getColor(R.color.normal_day));
-//        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorDayName, resources.getColor(R.color.normal_day));
-        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorNormalDayText, resources.getColor(R.color.normal_day));
-        mPreviousDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorPreviousDayText, resources.getColor(R.color.normal_day));
+        mCurrentDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorCurrentDay, normalColor);
+        mYearMonthTextColor = typedArray.getColor(R.styleable.DayPickerView_colorYearMonthText, normalColor);
+        mWeekTextColor = typedArray.getColor(R.styleable.DayPickerView_colorWeekText, normalColor);
+//        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorDayName, normalColor);
+        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorNormalDayText, normalColor);
+
+        mNegativeDayTagTextColor = typedArray.getColor(R.styleable.DayPickerView_colorNegativeDayTagText, normalColor);
+        mPreviousDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorPreviousDayText, normalColor);
         mSelectedDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayBackground, resources.getColor(R.color.selected_day_background));
         mSelectedDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayText, resources.getColor(R.color.selected_day_text));
         mBusyDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_colorBusyDaysBg, Color.GRAY);
         mInValidDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_colorInValidDaysBg, Color.GRAY);
-        mBusyDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_colorBusyDaysText, resources.getColor(R.color.normal_day));
+        mBusyDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_colorBusyDaysText, normalColor);
         mInValidDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_colorInValidDaysText, resources.getColor(R.color.normal_day));
 //        mDrawRect = typedArray.getBoolean(R.styleable.DayPickerView_drawRoundRect, true);
 
@@ -159,6 +176,7 @@ class SimpleMonthView extends View {
         isPrevDayEnabled = typedArray.getBoolean(R.styleable.DayPickerView_enablePreviousDay, false);
         mInvalidDays = dataModel.invalidDays;
         mBusyDays = dataModel.busyDays;
+        mNegativeDays = dataModel.mNegativeDays;
         mCalendarTags = dataModel.tags;
         mDefTag = dataModel.defTag;
 
@@ -273,7 +291,7 @@ class SimpleMonthView extends View {
             mDayTextPaint.setColor(mDayTextColor);
             mDayTextPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             mTagTextPaint.setColor(mDayTextColor);
-
+            mNegativeDayTagTextPaint.setColor(mNegativeDayTagTextColor);
             cellCalendar.setDay(mYear, mMonth, day);
 
             // 当天
@@ -298,7 +316,7 @@ class SimpleMonthView extends View {
                 drawDayBg(canvas, x, y, mSelectedDayBgPaint);
                 mDayTextPaint.setColor(mSelectedDayTextColor);
                 canvas.drawText("入住", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
-                if(isToady) {
+                if (isToady) {
                     canvas.drawText("今天", x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
                 }
             }
@@ -349,6 +367,7 @@ class SimpleMonthView extends View {
                 }
             }
 
+
             // 禁用的日期
             boolean isInvalidDays = false;
             for (SimpleMonthAdapter.CalendarDay calendarDay : mInvalidDays) {
@@ -378,6 +397,7 @@ class SimpleMonthView extends View {
                 }
             }
 
+
             // 把入住日期之前和不可用日期之后的日期全部灰掉(思路：
             // 1:入住日期和退房日期不能同一天
             // 2：只选择了入住日期且没有选择退房日期
@@ -392,8 +412,21 @@ class SimpleMonthView extends View {
                 }
             }
 
-            // 绘制标签
+
+            // 消极日期
+            boolean isNegativeDays = false;
             if (!isPrevDay && !isInvalidDays && !isBusyDay && !isBeginDay && !isLastDay) {
+                for (SimpleMonthAdapter.CalendarDay calendarDay : mNegativeDays) {
+                    if (cellCalendar.equals(calendarDay)) {
+                        isNegativeDays = true;
+//
+                        // 绘制
+                        canvas.drawText(calendarDay.tag, x, getTextYCenter(mNegativeDayTagTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mNegativeDayTagTextPaint);
+                    }
+                }
+            }
+            // 绘制标签
+            if (!isPrevDay && !isInvalidDays && !isBusyDay && !isBeginDay && !isLastDay&&!isNegativeDays) {
                 boolean isCalendarTag = false;
                 for (SimpleMonthAdapter.CalendarDay calendarDay : mCalendarTags) {
                     if (cellCalendar.equals(calendarDay)) {
@@ -422,6 +455,7 @@ class SimpleMonthView extends View {
 
     /**
      * 根据坐标获取对应的日期
+     *
      * @param x
      * @param y
      * @return
@@ -542,6 +576,15 @@ class SimpleMonthView extends View {
         mTagTextPaint.setStyle(Style.FILL);
         mTagTextPaint.setTextAlign(Align.CENTER);
         mTagTextPaint.setFakeBoldText(false);
+
+        mNegativeDayTagTextPaint = new Paint();
+        mNegativeDayTagTextPaint.setAntiAlias(true);
+        mNegativeDayTagTextPaint.setColor(mNegativeDayTagTextColor);
+        mNegativeDayTagTextPaint.setTextSize(TAG_TEXT_SIZE);
+        mNegativeDayTagTextPaint.setStyle(Style.FILL);
+        mNegativeDayTagTextPaint.setTextAlign(Align.CENTER);
+        mNegativeDayTagTextPaint.setFakeBoldText(false);
+
     }
 
     @Override
@@ -673,6 +716,7 @@ class SimpleMonthView extends View {
 
     /**
      * 在使用drawText方法时文字不能根据y坐标居中，所以重新计算y坐标
+     *
      * @param paint
      * @param y
      * @return
