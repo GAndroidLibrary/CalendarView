@@ -25,12 +25,12 @@ public class MainActivity extends AppCompatActivity {
         dayPickerView = (DayPickerView) findViewById(R.id.dpv_calendar);
 
         DayPickerView.DataModel dataModel = new DayPickerView.DataModel();
-        dataModel.yearStart = 2016;
-        dataModel.monthStart = 6;
-        dataModel.monthCount = 16;
+        dataModel.yearStart = 2018;
+        dataModel.monthStart = 10;
+        dataModel.monthCount = 2;
         dataModel.defTag = "￥100";
-        dataModel.leastDaysNum = 2;
-        dataModel.mostDaysNum = 100;
+        dataModel.leastDaysNum = 0;
+        dataModel.mostDaysNum = 0;
 
         List<SimpleMonthAdapter.CalendarDay> invalidDays = new ArrayList<>();
         SimpleMonthAdapter.CalendarDay invalidDay1 = new SimpleMonthAdapter.CalendarDay(2016, 8, 10);

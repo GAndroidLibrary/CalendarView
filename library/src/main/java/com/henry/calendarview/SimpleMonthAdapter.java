@@ -141,6 +141,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         v.invalidate();
     }
 
+    @Override
     public long getItemId(int position) {
         return position;
     }

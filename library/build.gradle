@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.2"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 23
+        minSdkVersion 16
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -22,16 +22,16 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:appcompat-v7:28.0.0'
 
-    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.android.support:recyclerview-v7:28.0.0'
 }
 
-publish {
-    userOrg = 'henry0311'
-    groupId = 'com.henry'
-    artifactId = 'calendarview'
-    publishVersion = '1.1.2'
-    desc = 'fix bug'
-    website = 'https://github.com/henry-newbie/CalendarView'
-}
+//publish {
+//    userOrg = 'henry0311'
+//    groupId = 'com.henry'
+//    artifactId = 'calendarview'
+//    publishVersion = '1.1.2'
+//    desc = 'fix bug'
+//    website = 'https://github.com/henry-newbie/CalendarView'
+//}
